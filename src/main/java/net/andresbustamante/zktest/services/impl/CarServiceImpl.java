@@ -11,7 +11,7 @@ import java.util.List;
 public class CarServiceImpl implements CarService {
 
     //data model
-    private List<Car> carList= new LinkedList<>();
+    private final List<Car> carList= new LinkedList<>();
     private static int id = 1;
 
     //initialize book data
