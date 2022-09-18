@@ -2,20 +2,23 @@ package net.andresbustamante.zktest.services.impl;
 
 import net.andresbustamante.zktest.model.Car;
 import net.andresbustamante.zktest.services.CarService;
+import org.apache.commons.lang3.StringUtils;
 import org.springframework.stereotype.Service;
 
 import java.util.LinkedList;
 import java.util.List;
+import java.util.stream.Collectors;
 
 @Service("carService")
 public class CarServiceImpl implements CarService {
 
     //data model
     private final List<Car> carList= new LinkedList<>();
-    private static int id = 1;
 
     //initialize book data
     public CarServiceImpl() {
+        int id = 1;
+
         carList.add(
                 new Car(id++,
                         "Primera",
@@ -102,16 +105,14 @@ public class CarServiceImpl implements CarService {
     }
 
     public List<Car> search(String keyword){
-        List<Car> result = new LinkedList<>();
-        if (keyword==null || "".equals(keyword)){
+        List<Car> result;
+        if (StringUtils.isEmpty(keyword) || StringUtils.isBlank(keyword)){
             result = carList;
-        }else{
-            for (Car c: carList){
-                if (c.getModel().toLowerCase().contains(keyword.toLowerCase())
-                        ||c.getMake().toLowerCase().contains(keyword.toLowerCase())){
-                    result.add(c);
-                }
-            }
+        } else {
+            result = carList.stream().filter(
+                    c -> c.getModel().toLowerCase().contains(keyword.toLowerCase())
+                        || c.getMake().toLowerCase().contains(keyword.toLowerCase())
+            ).collect(Collectors.toList());
         }
         return result;
     }
